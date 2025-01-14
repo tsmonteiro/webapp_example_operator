@@ -131,7 +131,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       app.navMenu.addListener(() => refresh());
 
       // await app.postInit();
-
+      app.isInitialized = true;
       refresh();
       
       closeLog();
