@@ -108,7 +108,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       // ];
 
       
-      var img = await rootBundle.load("assets/logo.png");
+      var img = await rootBundle.load("assets/img/logo.png");
       var bData = img.buffer.asUint8List();
       logo = Image.memory(bData, width: 380,
             height: 100);
@@ -130,7 +130,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       appData.addListener(refresh);
       app.navMenu.addListener(() => refresh());
 
-      await app.postInit();
+      // await app.postInit();
 
       refresh();
       
