@@ -9,6 +9,7 @@ import 'package:json_string/json_string.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webapp_template/screens/project_screen.dart';
+import 'package:webapp_template/screens/upload_data_screen.dart';
 import 'package:webapp_template/webapp.dart';
 import 'package:webapp_template/webapp_data.dart';
 import 'package:webapp_ui_commons/mixin/progress_log.dart';
@@ -124,6 +125,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
 
       app.addNavigationPage(
           "Project", ProjectScreen(appData, key: app.getKey("Project")));
+
+      app.addNavigationPage(
+          "Data Upload", UploadDataScreen(appData, key: app.getKey("UploadData")));
 
 
 
