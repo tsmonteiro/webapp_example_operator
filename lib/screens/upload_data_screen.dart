@@ -39,7 +39,7 @@ class _UploadDataScreenState extends State<UploadDataScreen>
     super.initState();
 
     var uploadComponent = UploadFileComponent("uploadComp", getScreenId(), "Upload Files", 
-          modelLayer.app.projectId, modelLayer.app.teamname);
+          widget.modelLayer.app.projectId, widget.modelLayer.app.teamname);
 
 
     addComponent("default", uploadComponent);

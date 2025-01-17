@@ -98,7 +98,7 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       log("Initializing User Session",
           dialogTitle: "WebApp");
 
-      await app.init();
+      await appData.app.init();
 
 
       log("Initializing File Structure",
@@ -129,13 +129,14 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
       app.addNavigationPage(
           "Data Upload", UploadDataScreen(appData, key: app.getKey("UploadData")));
 
-
+      
 
       appData.addListener(refresh);
       app.navMenu.addListener(() => refresh());
 
       // await app.postInit();
       app.isInitialized = true;
+      
       refresh();
       
       closeLog();
