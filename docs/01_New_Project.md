@@ -25,21 +25,25 @@ If you already know how to do all steps in Tercen, you can skip straight to sect
 
 ##### 2.1. Project Setup
 
-We start by creating an empty project and uploading the [DATA] file as a table to it. 
+[TODO]
+DESCRIBE ACTUALLY IMPORTING THE WORKFLOW!
+_Importing the Workflow_
 
-Then, we create a workflow from the WEBAPP EXAMPLE template. This workflow has 4 steps:
+A detailed overview on how to import <code>Workflow</code> GitHub repositories is described here [REF]. In this tutorial, we will need to import [the example UMAP workflow](https://github.com/tercen/webapp_tutorial_workflow) into our library.
+
+This workflow has 4 steps:
 
 1. The table step to which we will link our sample data
-2. The UMAP steps, which runs the UMAP operator on the data
+2. The UMAP step, which runs the UMAP operator on the data
 3. & 4. Are visualizations of the resulting UMAP. We will use them to inspect and download images of interest.
 
 [IMG_01 - Workflow]
 
-##### 2.1. Running the Workflow
+##### 2.2. Running the Workflow
 
 Now we select the TABLE Step and press run. A prompt appears asking us to select a file. We choose the file we uplaoded earlier and press Next. Although not mandatory, it is better to save our workflow now, in case we accidentally reload the page.
 
-Next, we double click on the UMAP step to build our projection.
+Next, we double click on the UMAP step to build our projection. We will set a standard projection with two channels. You may got to [REF] to check how projections are defined in Tercen. Here is how your projection should look.
 
 [DESCRIBE PROJECTION]
 
@@ -47,7 +51,7 @@ Once we finish setting up our projection we can run the UMAP actually calculatio
 
 DESCRIBE PLOTS
 
-##### 2.2. Saving the Images
+##### 2.3. Saving the Images
 
 TODO
 
@@ -115,14 +119,202 @@ In the root folder of the project, run the <code>flutter build web</code> comman
 Push the build changes to Github and install the WebApp as you would install any operator (REF To dev guide).
 
 
+###### 3.2.2 Running from the VS-Code
 
+TODO
 
 
 ##### 3.3. The Upload Data Screen
 
+_The Upload Screen Screen_
+
+The first functionality we want to add to our Web App is the ability to upload tables into our project using a Tercen component. Let's create a file called <code>lib/screens/upload_data_screen.dart</code> containing the code from <code>base_screen_snippet.dart</code>. 
+
+```dart
+// [...] Imports
+
+
+class UploadDataScreen extends StatefulWidget {
+  final WebAppData modelLayer;
+  const UploadDataScreen(this.modelLayer, {super.key});
+
+  @override
+  State<UploadDataScreen> createState() => _UploadDataScreenState();
+}
+
+class _UploadDataScreenState extends State<UploadDataScreen>
+    with ScreenBase, ProgressDialog {
+  @override
+  String getScreenId() {
+    return "UploadDataScreen";
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    disposeScreen();
+  }
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ....
+
+    // Component code goes here
+
+    // ...
+    initScreen(widget.modelLayer as WebAppDataBase);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildComponents(context);
+  }
+}
+
+```
+
+Then, we insert the components we want to see on our screen. In this case, we simply need the <code>UploadTableComponent</code>.
+
+```dart
+    var uploadComponent = UploadTableComponent("uploadComp", getScreenId(), "Upload Files", 
+          widget.modelLayer.app.projectId, widget.modelLayer.app.teamname);
+
+
+    addComponent("default", uploadComponent);
+```
+
+That's all we need for the screen. Now, we just need to have a navigation entry to reach it. To do that, we simply point to our screen near the end of the function.
+
+
+_Navigation Menu Entry_
+
+We add the navigation in the <code>initState</code> function of <code>main.dart</code> file. 
+
+
+```dart
+    //The project screen
+    app.addNavigationPage(
+          "Project", ProjectScreen(appData, key: app.getKey("Project")));
+    
+    // Our new Upload Data Screen goes here!
+    app.addNavigationPage(
+          "Data Upload", UploadDataScreen(appData, key: app.getKey("UploadData")));
+```
+
+And that's it. We are ready to see our screen in action. We can now rebuild the project and check how it looks in action. Don't forget to remove the **base** tag from the <code>index.html</code> file before committing the changes.
+
 ###### 3.3.1. Linking a WebApp to a Workflow Template
 
-###### 3.3.2. Exposing Workflow Settings
+We are going to add a different type of component to our screen: an <code>ActionComponent</code>. The <code>ActionComponent</code> adds a button that can invoke asynchronous computations. In our case, we want to run the <code>Workflow</code> we imported in section 2.1 [REF].
+
+_Configuring the Workflow in the WebApp_
+
+The WebApp needs a to know how it can access workflow templates from the library. Create a new file called <code>repos.json</code> under the <code>assets</code> folder and copy the following into it:
+
+[TODO] This workflow will be different
+```JSON
+{
+    "repos":[
+        {
+            "iid":"train_model",
+            "name":"Kumo train model",
+            "url":"https://github.com/tercen/kumo_train_model_workflow",
+            "version":"0.10.2"
+        }
+    ]
+}
+```
+Next, we tell the WebApp to load this information. First, we add this file to Flutter's pubspec file so it is loaded.
+
+```YAML
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/img/logo.png
+    - assets/img/wait.webp
+    - assets/repos.json
+```
+
+Finally, we read this information into the WebApp during initialization in the <code>main.dart</code> file. In the <code>initSession</code> function, we update the <code>appData.init</code> function call from
+
+```dart
+await appData.init(app.projectId, app.projectName, app.username);
+```
+to
+
+```dart
+await appData.init(app.projectId, app.projectName, app.username, 
+    reposJsonPath:"assets/repos.json");
+```
+
+_Adding the ActionComponent_
+
+We are ready to add a button in our screen that will run this <code>Workflow</code>.
+
+###### 3.3.2. Adding the ActionComponent
+
+Adding an <code>ActionComponent</code> to a screen is similar to a adding a standard <code>Component</code>. We create a <code>ButtonActionComponent</code> in the <code>init</code> function of our upload screen and add it to the action component list handled by the <code>ScreenBase</code>.
+
+```dart
+var runWorkflowBtn = ButtonActionComponent(
+    "runWorkflow", "Run Analysis", _runUmap);
+
+addActionComponent( runWorkflowBtn);
+
+initScreen(widget.modelLayer as WebAppDataBase);
+```
+
+The <code>ButtonActionComponent</code> requires an ID, a label and the asynchronous function that will be called when the button is clicked. 
+
+```dart
+Future<void> _runUmap() async {
+    
+}
+```
+
+###### 3.3.3. The WorkflowRunner
+
+The <code>Workflow</code> system in Tercen is powerful and highly flexible. The <code>WorkflowRunner</code> is a utility layer which handles the most common interactions a WebApp has with <code>Workflows</code>. Let's see step-by-step what we need to run our UMAP <code>Workflow</code>.
+
+_Getting the Input Data_
+
+We start by grabbing the data we uploaded from the <code>UploadTableComponent</code>. The <code>ScreenBase</code> provides a <code>getComponent</code> method that retrieves a <code>Component</code> based on its ID. Since we can upload multiple files at once, our component is a <code>MultiValueComponent</code>.
+
+```dart
+var filesComponent = getComponent("uploadComp", groupId: getScreenId()) as MultiValueComponent;
+
+var uploadedFiles = filesComponent.getValue();
+
+for( var uploadedFile in uploadedFiles ){
+    // Setup and run the workflow
+    
+    // ...
+}
+```
+
+The <code>getValue</code> function returns a list of <code>IdElement</code> objects, containing the uploaded files' id and name.
+
+_Configuring the WorkflowRunner_
+
+We create the <code>WorkflowRunner</code> object by passing the project ID, owner Id and the <code>Workflow</code> iid, as described in the <code>repos.json</code> file.
+
+```dart
+WorkflowRunner runner = WorkflowRunner(
+        widget.modelLayer.project.id,
+        widget.modelLayer.teamname.id,
+        widget.modelLayer.getWorkflow("umap"));
+```
+
+We must link the ID of the files we updated to the <code>TableStep</code> of the <code>Workflow</code>.
+
 
 ##### 3.4. The Report Screen
 
