@@ -6,58 +6,55 @@ This tutorial will guide in the creation of your first WebApp: the **UMAP report
 
 ### 1. UMAP Report App
 
-Our tutorial use case has four steps:
+Our tutorial use case has three steps:
 
 1. Upload some data
-2. Perform cluster analysis using UMAP
-3. Check the output 
-4. Download a PDF with images of interest
+2. Run UMAP on the data
+3. Download a resulting image
 
-You can download the sample data used in the tutorial from this repository [github.com/data].
+You can download the sample data used in the tutorial from [repository](https://github.com/tercen/webapp_tutorial_workflow).
 
 ##### 1.1. Sample Data Description
 
-TODO
+We will use the OMIP-069 1k donor [dataset](https://tercen.com/tercen/p/e0425f23e68966cc4df9df9bf6fcaa0d). The data has already been converted to the Tercen table format.
 
 ### 2. The Standard Method
 
-If you already know how to do all steps in Tercen, you can skip straight to section 3 [REF], otherwise let's see how to do this. You can also refer to the Developer's Guide [REF] for a detailed view on how to take advantage of Tercen's full functionality.
+If you already know how to do all steps in Tercen, you can skip straight to [section 3](#3-developing-a-webapp), otherwise let's see how to do this. You can also refer to the [Developer's Guide](https://tercen.com/explore) for a detailed view on how to take advantage of Tercen's full functionality.
 
 ##### 2.1. Project Setup
 
-[TODO]
-DESCRIBE ACTUALLY IMPORTING THE WORKFLOW!
 _Importing the Workflow_
 
-A detailed overview on how to import <code>Workflow</code> GitHub repositories is described here [REF]. In this tutorial, we will need to import [the example UMAP workflow](https://github.com/tercen/webapp_tutorial_workflow) into our library.
+A detailed overview on how to import <code>Workflow</code> GitHub repositories is described in [this video](https://www.youtube.com/watch?v=JaFlgRekJP8). In this tutorial, we will need to import [the example UMAP workflow](https://github.com/tercen/webapp_tutorial_workflow) into our library.
 
-This workflow has 4 steps:
+This workflow has 3 main features:
 
-1. The table step to which we will link our sample data
-2. The UMAP step, which runs the UMAP operator on the data
-3. & 4. Are visualizations of the resulting UMAP. We will use them to inspect and download images of interest.
+1. The table step to which we will link our sample data. We then convert the table from wide to long format usin the <code>Gather</code> step.
+2. We then have two analysis steps: <code>Run UMAP</code> and <code>Clustering</code>.
+3. Finally, we have two visualizations of the analysis. <code>Plot Cluster</code> exports the UMAP results colored by the <code>Clustering</code> results, whereas the <code>Plot</code> exports the marker value-coded UMAP coordinates.
 
-[IMG_01 - Workflow]
+<p>
+<center><img src="imgs/001_Workflow.png" alt="Workflow" width="300" title="Workflow"/></center>
+<center><em>Workflow used in the tutorial.</em></center>
+</p>
+
 
 ##### 2.2. Running the Workflow
 
-Now we select the TABLE Step and press run. A prompt appears asking us to select a file. We choose the file we uplaoded earlier and press Next. Although not mandatory, it is better to save our workflow now, in case we accidentally reload the page.
+Before diving into the WebApp creation, let's see our workflow in action. Press the 'Run All' button and select the OMIP data nad press 'Ok'.
 
-Next, we double click on the UMAP step to build our projection. We will set a standard projection with two channels. You may got to [REF] to check how projections are defined in Tercen. Here is how your projection should look.
+<p>
+<center><img src="imgs/001A_WorkflowRun.png" alt="Workflow" width="700" title="Workflow"/></center>
+<center><em>Running the Workflow. First press Run All, then select the data.</em></center>
+</p>
 
-[DESCRIBE PROJECTION]
+After a few moments, the process will finish and we can inspect the images produced. Afterwards, we can open the <code>Report</code> side-view and visualize or download the produced images.
 
-Once we finish setting up our projection we can run the UMAP actually calculation by pressing on the run button. After a few moments, the screen will update and show us a table with the calculated UMAP projections.
-
-DESCRIBE PLOTS
-
-##### 2.3. Saving the Images
-
-TODO
 
 ##### 2.3. Scaling
 
-If we want to keep every workflow executed -- and the generated images -- we would need to execute these steps for every new dataset we want to analyze. That is fine if we don't do that very often. In a scenario of multiple runs per day, or multiple users, the overhead can become noticeable.
+If we want to keep every workflow thas has ever been run in a project -- and the generated images -- we would need to execute these steps for every new dataset we want to analyze. That is fine if we don't do that very often. In a scenario of multiple runs per day, or multiple users, the overhead can become noticeable.
 
 One solution to this overhead is to do as much as possible inside the operator (see HERE about developing your own operators). Fore more complex analyses, this can make workflows harder to understand and audit in the long run.
 
@@ -66,7 +63,7 @@ A second solution is to develop an UI handles a lot of functionality "behid the 
 
 ### 3. Developing a WebApp
 
-This is the main section in our tutorial. Here, we will learn how to code a custom UI to run the steps described in section 2.
+WebApps are a way to provide users with a custom interaction with Tercen core functionality, automating and streamlining certain tasks. Our goal here is to build a WebApp that will allow users to more quickly execute the interactivity steps described in [section 2](#2-the-standard-method).
 
 **NOTE:** This tutorial assumes that the Flutter SDK is correctly installed.
 
@@ -103,11 +100,7 @@ Tercen provides a [webapp development library](https://github.com/tercen/webapp_
 
 ##### 3.2. Running the WebApp
 
-Before developing our code, let's first see how do we run our WebApp. 
-
-###### 3.2.1 Running from the Library
-
-The standard method of running a WebApp is by pressing the **Run** button after installing the WebApp in the library. Before doing that, however, we need to build the project.
+Before creating new screens, let's first see how do we run our WebApp. The standard method of running a WebApp is by pressing the **Run** button after installing the WebApp in the library. Before doing that, however, we need to build the project.
 
 In the root folder of the project, run the <code>flutter build web</code> command. One this is done, go into the **build/web** folder and open the <code>index.html</code>. Remove the <code>\<base href="/"\></code> line. This line interferes with how Tercen serves up WebApp pages, so if it is not removed, your WebApp will not be displayed.
 
@@ -116,13 +109,7 @@ In the root folder of the project, run the <code>flutter build web</code> comman
 <em>Line to be removed before commiting the build to Github.</em>
 </p>
 
-Push the build changes to Github and install the WebApp as you would install any operator (REF To dev guide).
-
-
-###### 3.2.2 Running from the VS-Code
-
-TODO
-
+Push the build changes to Github and install the WebApp as you would install any operator.
 
 ##### 3.3. The Upload Data Screen
 
@@ -163,7 +150,6 @@ class _UploadDataScreenState extends State<UploadDataScreen>
   @override
   void initState() {
     super.initState();
-
     // ....
 
     // Component code goes here
@@ -212,21 +198,20 @@ And that's it. We are ready to see our screen in action. We can now rebuild the 
 
 ###### 3.3.1. Linking a WebApp to a Workflow Template
 
-We are going to add a different type of component to our screen: an <code>ActionComponent</code>. The <code>ActionComponent</code> adds a button that can invoke asynchronous computations. In our case, we want to run the <code>Workflow</code> we imported in section 2.1 [REF].
+We are going to add a different type of component to our screen: an <code>ActionComponent</code>. The <code>ActionComponent</code> adds a button that can invoke asynchronous computations. In our case, we want to run the <code>Workflow</code> we imported in [section 2.1](#21-project-setup).
 
 _Configuring the Workflow in the WebApp_
 
 The WebApp needs a to know how it can access workflow templates from the library. Create a new file called <code>repos.json</code> under the <code>assets</code> folder and copy the following into it:
 
-[TODO] This workflow will be different
 ```JSON
 {
     "repos":[
         {
-            "iid":"train_model",
-            "name":"Kumo train model",
-            "url":"https://github.com/tercen/kumo_train_model_workflow",
-            "version":"0.10.2"
+            "iid":"umap_workflow",
+            "name":"UMAP Workflow",
+            "url":"https://github.com/tercen/webapp_tutorial_workflow",
+            "version":"0.1.0"
         }
     ]
 }
@@ -318,8 +303,47 @@ We must link the ID of the files we updated to the <code>TableStep</code> of the
 
 ##### 3.4. The Report Screen
 
-###### 3.4.1. Mapping Workflow Steps
+After running the <code>Workflow</code> we are going to access its output to build a report screen.
 
+###### 3.4.1. Adding Screen Components
+
+We will use a <code>SelectableList(??)</code> to get a list of <code>Workflows</code>. Simply add the <code>Component</code> as we did in [section 3.3](#33-the-upload-data-screen). It will require a **fetch** parameter. Copy the code below into screen and let's see what it does.
+
+```dart
+Future<IdElementTable> fetchUmapWorkflows() async {
+  var factory = tercen.ServiceFactory();
+
+  var workflows = factory.projectObjectService.findByOwnerAndLastModified(startKey:[], endKey: []);
+
+  var workflowColumn = workflows.map((e) => IdElement(e.id, e.name)).toList();
+
+
+  var table = IdElementTable();
+
+  return table;
+}
+```
+
+The <code>fetchUmapWorkflows</code> is callback to a function which access whatever data layer our WebApp has. It can be a function which searches the project files, access a remote API or otehr similar functions. In our case, we want to search our project for <code>Workflows</code> that we have previously ran.
+
+>NOTES
+>* <code>IdElementTable</code> is a utility class which holds multiple <code>List<IdElement></code>.
+>* <code>IdElement</code> itself is an utility class that holds an id and a label, both <code>String</code> objects.
+>* <code>tercen.ServiceFactory</code> provides access to Tercen's API functions.
+
+Finally, we add an <code>ActionButtonComponent</code> to call the download function when pressed.
+
+```dart
+  //TODO Code to the action component
+```
+
+###### 3.4.2. Downloading the images
+
+To download the images, we will make calls to the Tercen API to retrieve the output of specific steps. Although not specific to WebApp development, this interaction is important for a lot of the functionality we want WebApps to have, so we will briefly go over how to access the results of a <code>Workflow</code>. 
+
+```dart
+
+```
 
 
 

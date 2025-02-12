@@ -64,7 +64,7 @@ flutter:
   assets:
     - assets/img/logo.png
     - assets/img/wait.webp
-    #- assets/repos.json
+    - assets/repos.json
     #- assets/umap_settings.json
     #- assets/workflow_steps.json
 
