@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:webapp_template/screens/project_screen.dart';
+import 'package:webapp_template/screens/report_screen.dart';
+import 'package:webapp_template/screens/upload_data_screen.dart';
 import 'package:webapp_template/globals.dart' as globals;
 
 import 'package:flutter/material.dart';
@@ -9,6 +12,7 @@ import 'package:json_string/json_string.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webapp_template/screens/project_screen.dart';
+import 'package:webapp_template/screens/report_screen.dart';
 import 'package:webapp_template/screens/upload_data_screen.dart';
 import 'package:webapp_template/webapp.dart';
 import 'package:webapp_template/webapp_data.dart';
@@ -128,6 +132,9 @@ class _TwoColumnHomeState extends State<TwoColumnHome> with ProgressDialog {
 
       app.addNavigationPage(
           "Data Upload", UploadDataScreen(appData, key: app.getKey("UploadData")));
+
+      app.addNavigationPage(
+          "Image Download", ReportScreen(appData, key: app.getKey("ImageDownload")));
 
       
 

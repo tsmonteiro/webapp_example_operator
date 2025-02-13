@@ -11,7 +11,7 @@
       "tercen"
     ],
     "urls": [
-      "https://github.com/tercen/webapp_template"
+      "https://github.com/tercen/webapp_example"
     ],
     "serve": "build/web",
     "properties": [

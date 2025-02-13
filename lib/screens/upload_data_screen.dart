@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:webapp_components/screens/screen_base.dart';
 import 'package:webapp_components/action_components/button_component.dart';
-import 'package:webapp_model/webapp_data_base.dart';
 import 'package:webapp_template/tmp2.dart';
 import 'package:webapp_template/webapp_data.dart';
+import 'package:webapp_model/webapp_data_base.dart';
+
 import 'package:webapp_ui_commons/mixin/progress_log.dart';
 import 'package:webapp_components/abstract/multi_value_component.dart';
 import 'package:webapp_workflow/runners/workflow_runner.dart';
@@ -56,6 +57,8 @@ class _UploadDataScreenState extends State<UploadDataScreen>
   }
 
   Future<void> _runUmap() async {
+    openDialog(context);
+    log("Running Workflow, please wait.");
     var filesComponent = getComponent("uploadComp", groupId: getScreenId()) as MultiValueComponent;
 
     var uploadedFiles = filesComponent.getValue();
@@ -64,16 +67,17 @@ class _UploadDataScreenState extends State<UploadDataScreen>
       WorkflowRunner runner = WorkflowRunner(
         widget.modelLayer.project.id,
         widget.modelLayer.teamname.id,
-        widget.modelLayer.getWorkflow("train_model"));
+        widget.modelLayer.getWorkflow("umap_workflow"));
 
       //TODO
       //Will likely need a function to better interact with tables
-      runner.addDocument("f4d5e14a-6d75-4d44-ad77-7ae106bd9fb0", uploadedFile.id);
+      runner.addTableDocument("f4d5e14a-6d75-4d44-ad77-7ae106bd9fb0", uploadedFile.id);
 
-
+      runner.addPostRun( widget.modelLayer.reloadProjectFiles );
       await runner.doRun(context);
 
     }
+    closeLog();
 
   }
 

@@ -575,7 +575,7 @@ packages:
     description:
       path: webapp_components
       ref: main
-      resolved-ref: "88d8acd80c5af0e94877c619128cab491f01812c"
+      resolved-ref: "8d00f92b72cabbe2c2d0cee3ff56bc2f58eb0f75"
       url: "git@github.com:tercen/webapp_lib"
     source: git
     version: "0.0.1"
@@ -584,7 +584,7 @@ packages:
     description:
       path: webapp_model
       ref: main
-      resolved-ref: "88d8acd80c5af0e94877c619128cab491f01812c"
+      resolved-ref: "8d00f92b72cabbe2c2d0cee3ff56bc2f58eb0f75"
       url: "git@github.com:tercen/webapp_lib"
     source: git
     version: "0.0.1"
@@ -593,16 +593,16 @@ packages:
     description:
       path: webapp_ui_commons
       ref: main
-      resolved-ref: "88d8acd80c5af0e94877c619128cab491f01812c"
+      resolved-ref: "8d00f92b72cabbe2c2d0cee3ff56bc2f58eb0f75"
       url: "git@github.com:tercen/webapp_lib"
     source: git
     version: "0.0.1"
   webapp_utils:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       path: webapp_utils
       ref: main
-      resolved-ref: "88d8acd80c5af0e94877c619128cab491f01812c"
+      resolved-ref: "8d00f92b72cabbe2c2d0cee3ff56bc2f58eb0f75"
       url: "git@github.com:tercen/webapp_lib"
     source: git
     version: "0.0.1"
@@ -611,7 +611,7 @@ packages:
     description:
       path: webapp_workflow
       ref: main
-      resolved-ref: "88d8acd80c5af0e94877c619128cab491f01812c"
+      resolved-ref: "8d00f92b72cabbe2c2d0cee3ff56bc2f58eb0f75"
       url: "git@github.com:tercen/webapp_lib"
     source: git
     version: "0.0.1"

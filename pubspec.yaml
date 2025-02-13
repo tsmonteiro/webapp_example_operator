@@ -35,12 +35,24 @@ dev_dependencies:
 
 
   webapp_components:
+    # path: /home/thiago/workspaces/tercen/projects/current_main/webapp_lib/webapp_components
     git:
       ref: main
       url: git@github.com:tercen/webapp_lib
+      # url: /home/thiago/workspaces/tercen/projects/current_main/webapp_lib
+      
       path: webapp_components
 
+  webapp_utils:
+  #   # path: /home/thiago/workspaces/tercen/projects/current_main/webapp_lib/webapp_utils
+    git:
+      ref: main
+      url: git@github.com:tercen/webapp_lib
+      path: webapp_utils
+
   webapp_workflow:
+    # path: /home/thiago/workspaces/tercen/projects/current_main/webapp_lib/webapp_workflow
+    #   url: /home/thiago/workspaces/tercen/projects/current_main/webapp_lib  
     git:
       ref: main
       url: git@github.com:tercen/webapp_lib

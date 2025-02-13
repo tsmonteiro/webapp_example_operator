@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import 'package:webapp_template/tmp.dart';
+
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_dropzone/flutter_dropzone.dart';
-import 'package:webapp_components/abstract/multi_value_component.dart';
-import 'package:webapp_components/definitions/component.dart';
-import 'package:webapp_components/mixins/component_base.dart';
+
 import 'package:webapp_model/id_element.dart';
-import 'package:webapp_ui_commons/mixin/progress_log.dart';
-import 'package:webapp_ui_commons/styles/styles.dart';
+
 import 'package:webapp_utils/services/file_data_service.dart';
 
 import 'dart:typed_data';
@@ -54,7 +52,18 @@ class UploadTableComponent extends UploadFileComponent2 {
 
   }
 
-    Future<String> uploadFile(String filename, String projectId, String owner, Uint8List data, {String folderId = ""} ) async {
+  @override
+  List<IdElement> getValue() {
+    if( uploadedFiles.isEmpty ){
+      return filesToUpload.map((e) => IdElement(e.filename, e.filename) ).toList();
+    }else{
+      return uploadedFiles;
+    }
+    
+  }
+
+
+  Future<String> uploadFile(String filename, String projectId, String owner, Uint8List data, {String folderId = ""} ) async {
     var factory = tercen.ServiceFactory();
 
     var metadata = CSVFileMetadata()
@@ -101,8 +110,12 @@ class UploadTableComponent extends UploadFileComponent2 {
       // ...
     }
 
+    csvTask =
+        await factory.taskService.get(csvTask.id) as CSVTask;
 
-    return file.id;
+    
+
+    return csvTask.schemaId;
 
   }
 
