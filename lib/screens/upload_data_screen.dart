@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:webapp_components/screens/screen_base.dart';
 import 'package:webapp_components/action_components/button_component.dart';
-import 'package:webapp_template/tmp2.dart';
+import 'package:webapp_components/components/upload_table_component.dart';
 import 'package:webapp_template/webapp_data.dart';
 import 'package:webapp_model/webapp_data_base.dart';
 
